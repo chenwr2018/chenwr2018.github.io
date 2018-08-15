@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Smile at life</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Smile at life">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="Smile at life">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Smile at life">
+  
+    <link rel="alternate" href="/atom.xml" title="Smile at life" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Smile at life</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-海思平台移植" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/08/15/海思平台移植/" class="article-date">
+  <time datetime="2018-08-15T12:09:28.450Z" itemprop="datePublished">2018-08-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>目录<br>[toc]</p>
+<h3 id="lrzsz移植步骤"><a href="#lrzsz移植步骤" class="headerlink" title="lrzsz移植步骤"></a>lrzsz移植步骤</h3><p>平台：海思3515A</p>
+<p>系统：Ubuntu12.04</p>
+<p>作用：串口发送接收工具</p>
+<h4 id="移植成功的源码版本"><a href="#移植成功的源码版本" class="headerlink" title="移植成功的源码版本"></a>移植成功的源码版本</h4><p><a href="http://note.youdao.com/noteshare?id=eb41409a0648f7d10edd01879be537b1&amp;sub=F31F0C07B8BA4FF19984D03D97A464E0" target="_blank" rel="noopener">压缩包存放地址</a></p>
+<p>a. lrzsz源码下载</p>
+<pre><code>1.lrzsz源码包下载地址：https://ohse.de/uwe/releases/lrzsz-0.12.20.tar.gz
+
+2.http://down1.chinaunix.net/distfiles/lrzsz-0.12.20.tar.gz //两个链接网址都能下载
+</code></pre><p>b. 解压文件</p>
+<p>c. 运行.configure</p>
+<p>输入命令：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CFLAGS=-O2 CC=arm-hisiv100nptl-linux-gcc ./configure --cache-file=arml_cachefile0 --prefix=/usr/local/</span><br></pre></td></tr></table></figure>
+<p>&nbsp;&nbsp;这条命令很关键，避免自己去修改Makefile后出现编译失败的问题。<br>(前提是交叉编译器已经安装配置好了)</p>
+<p><strong>参数说明</strong></p>
+<pre><code>1. CFLAGS=-O2 //编译选项
+
+2. CC=arm-linux-gcc //配置编译器为交叉编译器  
+加上CC参数表示即时生效，雅讯海思平台中的交叉编译器为arm-hisiv100nptl-linux-gcc
+
+3.  ./configure //配置文件 前面两项必须放在./configure的前面 否则设置无效
+
+--cache-file=arml_cachefile0  //这个命令是生成自己的cache-file  
+后面的arml_cachefile0是我自己为生成的cache-file取的名字
+
+4. --prefix=/usr/local/ //表示具体安装到哪里 这个可以不要 我们只需要交叉编译生成的lzr和lsr就可以了
+</code></pre><p>d. make</p>
+<p>当前解压目录的src目录下可以看到目标生成文件lrz lsz</p>
+<font color="red">关键之处在于，CC参数要放在configure之前，并且要制定cache file，才能完全即时识别交叉编译器 </font>
+
+<font color="red">：CC=arm-linux-gcc ./configure –cache-file=arml_cache_file0(这个名字可以随便取)<br>下面一步就是将lrz，lsz两个目标文件拷贝到开发板上的/usr/sbin/目录下（我是这么做的</font>
+
+
+<p>发送接收只需要在开发板敲命令<br>lrz lsz</p>
+<p>e. lrz传输过程出现错误 </p>
+<p><strong>gmentation fault</strong><br>传输失败 （换个空间大点的目录就OK了）</p>
+<h4 id="Linux-环境变量的作用"><a href="#Linux-环境变量的作用" class="headerlink" title="Linux 环境变量的作用"></a>Linux 环境变量的作用</h4><p><strong>关于PATH的作用：</strong></p>
+<pre><code>PATH说简单点就是一个字符串变量，当输入命令的时候LINUX会去查找PATH里面记录的路径。
+
+比如在根目录/下可以输入命令ls,在/usr目录下也可以输入ls,但其实ls这个命令根本不在这个两个目录下，  
+事实上当你输入命令的时候LINUX会去/bin,/usr/bin,/sbin等目录下面去找你此时输入的命令，而PATH的值恰恰就是/bin:/sbin:/usr/bin:……。其中的冒号使目录与目录之间隔开。
+
+简单的说，就是敲相应的命令时，会去环境变量设置的路径去寻找可执行文件。
+</code></pre><h4 id="新增与删除环境变量"><a href="#新增与删除环境变量" class="headerlink" title="新增与删除环境变量"></a>新增与删除环境变量</h4><pre><code>1.新增一个命令，该命令可执行文件在/usr/locar/new/bin下面，修改环境变量PATH了。
+
+2.bash命令export PATH=$PATH:/usr/locar/new/bin。使PATH自增:/usr/locar/new/bin,既PATH=PATH+&quot;:/usr/locar/new/bin&quot;;
+
+3.查看是否添加成功。echo $PATH。
+
+4.删除环境变量。
+新增的路径/usr/locar/new/bin已经没用了的话。
+可修改/root/.bashrc文件里面你新增的路径。
+或者修改/etc/profile文件删除你不需要的路径.
+</code></pre><h4 id="交叉编译工具链应用"><a href="#交叉编译工具链应用" class="headerlink" title="交叉编译工具链应用"></a>交叉编译工具链应用</h4><p>一般来说，配置交叉编译工具链的时候需要指定编译工具的路径，此时就需要设置环境变量。例如我的mips-linux-gcc编译器在“/opt/au1200_rm/build_tools/bin”目录下，build_tools就是我的编译工具，则有如下三种方法来设置环境变量：</p>
+<h5 id="（1）临时环境变量-重启后消失"><a href="#（1）临时环境变量-重启后消失" class="headerlink" title="（1）临时环境变量(重启后消失)"></a>（1）临时环境变量(重启后消失)</h5><pre><code>直接用export命令：
+#export PATH=$PATH:/opt/au1200_rm/build_tools/bin
+查看是否已经设好，可用命令export查看：
+</code></pre><h5 id="（2）永久环境变量"><a href="#（2）永久环境变量" class="headerlink" title="（2）永久环境变量"></a>（2）永久环境变量</h5><h6 id="修改profile文件："><a href="#修改profile文件：" class="headerlink" title="修改profile文件："></a>修改profile文件：</h6><pre><code>所有用户(不安全)
+修 改/etc/profile（对所有用户都是有效的）
+#vi /etc/profile
+在里面加入:
+export PATH=&quot;$PATH:/opt/au1200_rm/build_tools/bin&quot;
+</code></pre><h6 id="修改-bashrc文件"><a href="#修改-bashrc文件" class="headerlink" title="修改.bashrc文件"></a>修改.bashrc文件</h6><pre><code>vi /~/.bashrc
+(单独用户)
+修改~/.bashrc文件。  （每个用户目录下都有，ls -all）
+cd ~
+vi .bashrc
+在里面加入：
+export PATH=&quot;$PATH:/opt/au1200_rm/build_tools/bin&quot;
+</code></pre><p>&nbsp;&nbsp;后两种方法一般需要重新注销系统才能生效，最后可以通过echo命令测试一下：<br>echo $PATH<br>看看输出里面是不是已经有了/my_new_path这个路径了。</p>
+<p>环境变量更改后，在用户下次登陆时生效，如果想立刻生效，则可执行下面的语句：$ source .bash_profile</p>
+<p><strong>参考博客</strong></p>
+<p><a href="https://blog.csdn.net/qlzx_syzx/article/details/53674823" target="_blank" rel="noopener">linux中PATH环境变量的作用和使用方法</a></p>
+<p><strong>这篇写的条理更加清晰</strong></p>
+<p><a href="https://www.cnblogs.com/aaronLinux/p/5837702.html" target="_blank" rel="noopener">Linux下查看和添加环境变量</a></p>
+<h4 id="Linux添加环境变量与GCC编译器添加INCLUDE与LIB环境变量"><a href="#Linux添加环境变量与GCC编译器添加INCLUDE与LIB环境变量" class="headerlink" title="Linux添加环境变量与GCC编译器添加INCLUDE与LIB环境变量"></a>Linux添加环境变量与GCC编译器添加INCLUDE与LIB环境变量</h4><p>对所有用户有效在/etc/profile增加以下内容。只对当前用户有效在Home目录下的<br>.bashrc或.bash_profile里增加下面的内容：<br>(注意：等号前面不要加空格,否则可能出现 command not found)</p>
+<p>在PATH中找到可执行文件程序的路径。<br>export PATH =PATH:PATH:HOME/bin</p>
+<p>gcc找到头文件的路径<br>C_INCLUDE_PATH=/usr/include/libxml2:/MyLib<br>export C_INCLUDE_PATH</p>
+<p>g++找到头文件的路径<br>CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:/usr/include/libxml2:/MyLib<br>export CPLUS_INCLUDE_PATH</p>
+<p>找到动态链接库的路径<br>LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/MyLib<br>export LD_LIBRARY_PATH</p>
+<p>找到静态库的路径<br>LIBRARY_PATH=$LIBRARY_PATH:/MyLib<br>export LIBRARY_PATH</p>
+<h4 id="linux各个目录作用"><a href="#linux各个目录作用" class="headerlink" title="linux各个目录作用"></a>linux各个目录作用</h4><p>/bin</p>
+<pre><code>bin是Binary的缩写，这个目录存放着最经常使用的命令。
+</code></pre><p>/boot</p>
+<pre><code>这里存放的是启动Linux时的一些核心文件，包括一些连接文件以及镜像文件。
+</code></pre><p>/dev</p>
+<pre><code>dev是Device的缩写，该目录下存放的是Linux的外部设备，在Linux中访问设备的方式和访问文件的方式是相同的。
+</code></pre><p>/etc</p>
+<pre><code>这个目录用来存放所有的系统管理所需要的配置文件和子目录。
+</code></pre><p>/home</p>
+<pre><code>用户的主目录，在Linux中，每个用户都有一个自己的目录，一般该目录名是以用户的账号命名的。
+</code></pre><p>/lib</p>
+<pre><code>这个目录里存放着系统最基本的动态连接共享库，起作用类似于Windows的DLL文件。几乎所有的应用程序都需要用到这些共享库。
+</code></pre><p>/lost+found</p>
+<pre><code>这个目录一般情况下是空的，当系统非法关机后，这里就存放了一些文件。
+</code></pre><p>/media</p>
+<pre><code>Linux系统会自动识别一些设备，例如U盘、光驱等等，当时别后，Linux会把识别的设备挂载到这个目录下。
+</code></pre><p>/mnt</p>
+<pre><code>系统提供该目录是为了让用户临时挂载别的文件系统的，我们可以将光驱挂载在/mnt/上，然后进入该目录就可以查看光驱里的内容了。
+</code></pre><p>/opt</p>
+<pre><code>这是给主机额外安装软件所摆放的目录。比如你安装一个Oracle数据库就可以放到这个目录下。默认是空的。
+</code></pre><p>/proc</p>
+<pre><code>这个目录是一个虚拟的目录，它是系统内存的映射，我们可以通过直接访问这个目录来获取系统信息。 
+这个目录的内容不在硬盘上而是在内存里，我们也可以直接修改里面的某些文件，比如可以通过下面的命令来屏蔽主机的ping命令，使别人无法ping你的机器：
+</code></pre><p>/root</p>
+<pre><code>超级管理员的用户主目录
+</code></pre><p>/sbin</p>
+<pre><code>s就是super user的意思，这里存放的是系统管理员使用的系统管理程序。
+</code></pre><p>/selinux</p>
+<pre><code>这个目录是Redhat/CentOS所特有的目录，Selinux是一个安全机制，类似于windows的防火墙，但是这套机制比较复杂，这个目录就是存放selinux相关的文件的。
+</code></pre><p>/srv</p>
+<pre><code>该目录存放一些服务启动之后需要提取的数据。
+</code></pre><p>/sys</p>
+<pre><code>该目录下安装了2.6内核中新出现的一个文件系统sysfs。sysfs文件系统集成了下面3种文件系统的信息：针对进程信息的proc文件系统、针对设备的devfs文件系统以及针对伪终端的devpts文件系统。 
+该文件系统是内核设备树的一个直观反映。当一个内核对象被直接创建的时候。对应的文件和目录也在内核对象子系统中被创建。
+</code></pre><p>/tmp</p>
+<pre><code>该目录用来存放一些临时文件。
+</code></pre><p>/usr</p>
+<pre><code>这是一个非常重要的目录，用户的很多应用程序和文件都放在这个目录下，类似与windows下的program files目录。
+</code></pre><p>/usr/bin</p>
+<pre><code>系统用户使用的应用程序。
+</code></pre><p>/usr/src</p>
+<pre><code>内核源代码默认的放置目录。
+</code></pre><p>/var</p>
+<pre><code>这个目录中存放着在不断扩充的东西，我们习惯将那些经常被修改的目录放在这个目录下。包括各种日志文件。
+</code></pre><p><strong>总结</strong></p>
+<p>在Linux系统中，有几个目录是比较重要的，平时需要注意不要误删除或者随意更改内部文件。 </p>
+<p>/etc：上边也提到了，这个是系统中的配置文件，如果你更改了该目录下的某个文件可能会导致系统不能启动。</p>
+<p>/bin, /sbin, /usr/bin, /usr/sbin: 这是系统预设的执行文件的放置目录，比如 ls 就是在/bin/ls 目录下的。</p>
+<p>其中/bin，/usr/bin 是给系统用户使用的指令（除root外的通用户），而/sbin, /usr/sbin 则是给root使用的指令。</p>
+<p>/var： 这是一个非常重要的目录，系统上跑了很多程序，那么每个程序都会有相应的日志产生，而这些日志就被记录到这个目录下，具体在/var/log 目录下，另外mail的预设放置也是在这里。</p>
+<h3 id="samba移植"><a href="#samba移植" class="headerlink" title="samba移植"></a>samba移植</h3><p>环境Ubuntu12.04</p>
+<p>源码：samba-4.4.8.tar.gz</p>
+<p>Samba服务器下载官网：<a href="https://www.samba.org/samba/history/" target="_blank" rel="noopener">https://www.samba.org/samba/history/</a></p>
+<p>1.解压后运行configure</p>
+<pre><code>如果出现错误就 sudo apt-get install libgnutls-dev libacl1-dev libldap2-dev
+</code></pre><p>2.configure命令</p>
+<p>./configure –host=arm-hisiv100nptl-linux-gcc –prefix=/home/cwr/install_dir/</p>
+<p><strong>出现错误</strong></p>
+<p>undefined reference to `_nc_panelhook’</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">3496</span>/<span class="number">3768</span>] Linking <span class="keyword">default</span>/source3/samba-regedit</span><br><span class="line">/usr/lib/libpanel.a(p_delete.o): In function `del_panel':</span><br><span class="line">p_delete.c:(.text+<span class="number">0x4d</span>): undefined reference to `_nc_panelhook'</span><br><span class="line">p_delete.c:(.text+<span class="number">0x22f</span>): undefined reference to `_nc_panelhook'</span><br><span class="line">p_delete.c:(.text+<span class="number">0x239</span>): undefined reference to `_nc_panelhook'</span><br><span class="line">p_delete.c:(.text+<span class="number">0x274</span>): undefined reference to `_nc_panelhook'</span><br><span class="line">p_delete.c:(.text+<span class="number">0x291</span>): undefined reference to `_nc_panelhook'</span><br><span class="line">/usr/lib/libpanel.a(p_delete.o):p_delete.c:(.text+<span class="number">0x2a9</span>): more undefined references to `_nc_panelhook' follow</span><br><span class="line">/usr/lib/libpanel.a(p_move.o): In function `move_panel':</span><br><span class="line">p_move.c:(.text+<span class="number">0x24f</span>): undefined reference to `mvwin'</span><br><span class="line">/usr/lib/libpanel.a(p_new.o): In function `new_panel':</span><br><span class="line">p_new.c:(.text+<span class="number">0x1a</span>): undefined reference to `_nc_panelhook'</span><br><span class="line">p_new.c:(.text+<span class="number">0x79</span>): undefined reference to `_nc_panelhook'</span><br><span class="line">p_new.c:(.text+<span class="number">0x85</span>): undefined reference to `_nc_panelhook'</span><br><span class="line">p_new.c:(.text+<span class="number">0x91</span>): undefined reference to `_nc_panelhook'</span><br><span class="line">p_new.c:(.text+<span class="number">0xa7</span>): undefined reference to `_nc_panelhook'</span><br><span class="line">/usr/lib/libpanel.a(p_new.o):p_new.c:(.text+<span class="number">0xb3</span>): more undefined references to `_nc_panelhook' follow</span><br><span class="line">collect2: ld 返回 <span class="number">1</span></span><br><span class="line">Waf: Leaving directory `/home/cwr/tools/samba<span class="number">-4.4</span><span class="number">.8</span>/bin'</span><br><span class="line">Build failed:  -&gt; task failed (err #1): </span><br><span class="line">	&#123;task: cc_link regedit_235.o,regedit_samba3_235.o,regedit_wrap_235.o,regedit_treeview_235.o,regedit_valuelist_235.o,regedit_dialog_235.o,regedit_hexedit_235.o,regedit_list_235.o -&gt; samba-regedit&#125;</span><br><span class="line">make: *** [all] 错误 <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>最后放弃该版本的samba移植，去官网下载早期版本。</p>
+<p>一、准备工作</p>
+<p>1、下载源码包samba-3.2.15.tar.gz<br><a href="http://ftp.samba.org/pub/samba/" target="_blank" rel="noopener">http://ftp.samba.org/pub/samba/</a></p>
+<p>2、执行命令</p>
+<p>CC=arm-hisiv100nptl-linux-gcc ./configure samba_cv_CC_NEGATIVE_ENUM_VALUES=yes –host=i686 –target=arm-linux –prefix=/home/cwr/install_dir/</p>
+<p>make</p>
+<p>make install</p>
+<p>成功参看如下博客完成移植<br><a href="http://bbs.eeworld.com.cn/forum.php?mod=viewthread&amp;tid=445458&amp;fromuid=564203" target="_blank" rel="noopener">helper2416_移植samba服务器_欢迎测试</a></p>
+<h4 id="configure的作用"><a href="#configure的作用" class="headerlink" title="configure的作用"></a>configure的作用</h4><p>./configure是源代码安装的第一步，</p>
+<p>主要的作用是对即将安装的软件进行配置，检查当前的环境是否满足要安装软件的依赖关系，</p>
+<p>但并不是所有的tar包都是源代码的包，可以ls看看有没有configure这个文件，如果是二进制的包，解压后直接就能使用</p>
+<h4 id="configure相关参数"><a href="#configure相关参数" class="headerlink" title="./configure相关参数"></a>./configure相关参数</h4><pre><code>–help：显示帮助信息并退出  如 ./configure -help （--help 都可以）
+
+–prefix=/home/carl：指定安装位置，如果安装位置不指定，默认路径为/usr/local下的bin、lib等文件夹
+
+–build：就是你正在使用的机器，查看本机使用的可以在configure目录下执行./config.guess
+
+–host：就是你编译好的程序可以运行的机器
+
+–target：就是你编译好的程序可以处理的其他平台
+
+比如你build的机器是x86，想运行的host机器是arm，程序可以处理的程序target是mips
+
+CC：指定编译工具链的名字
+
+CFLAGS：指定头文件（.h文件）的路径，如：CFLAGS=-I/usr/include -I/path/include
+
+LDFLAGS：gcc 等编译器会用到的一些优化参数，也可以在里面指定库文件的位置。用法：LDFLAGS=-L/usr/lib -L/path/to/your/lib
+
+LIBS：告诉链接器要链接哪些库文件，如LIBS = -lpthread -liconv
+</code></pre><p>附上链接</p>
+<p>之前遇到的比较奇特的问题，虽然之后还是没解决，换了早期的samba软件版本，还是记录下吧。</p>
+<p><a href="https://bugzilla.samba.org/show_bug.cgi?id=6548" target="_blank" rel="noopener">link1</a></p>
+<p><a href="http://www.cnblogs.com/rayfloyd/archive/2012/11/27/2790730.html" target="_blank" rel="noopener">link2</a></p>
+<p>命令行 smbd -i</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">creating lame upcase table</span><br><span class="line">creating lame lowcase table</span><br><span class="line">smbd version <span class="number">3.2</span><span class="number">.15</span> started.</span><br><span class="line">Copyright Andrew Tridgell <span class="keyword">and</span> the Samba Team <span class="number">1992</span><span class="number">-2009</span></span><br><span class="line">ERROR: Failed to initialise messages database: No such file <span class="keyword">or</span> directory</span><br><span class="line">messaging_tdb_init failed: NT_STATUS_OBJECT_NAME_NOT_FOUND</span><br><span class="line">PANIC (pid <span class="number">13544</span>): Could <span class="keyword">not</span> init smbd messaging context</span><br><span class="line">unable to produce a <span class="built_in">stack</span> trace on <span class="keyword">this</span> platform</span><br><span class="line">unable to change to /home/cwr/install_dir/var/cores/smbd</span><br><span class="line">refusing to dump core</span><br></pre></td></tr></table></figure>
+<h3 id="ssh移植"><a href="#ssh移植" class="headerlink" title="ssh移植"></a>ssh移植</h3><p>参考博客</p>
+<p><a href="https://blog.csdn.net/buynow123/article/details/51917643" target="_blank" rel="noopener">通过ssh连接开发板之arm-linux下ssh的安装使用CSDN博客</a></p>
+<h3 id="1-zlib、openssl、openssh源码下载"><a href="#1-zlib、openssl、openssh源码下载" class="headerlink" title="1.zlib、openssl、openssh源码下载"></a>1.zlib、openssl、openssh源码下载</h3><p><a href="http://note.youdao.com/noteshare?id=eb41409a0648f7d10edd01879be537b1&amp;sub=F31F0C07B8BA4FF19984D03D97A464E0" target="_blank" rel="noopener">zlib openssl openssh压缩包存放地址</a></p>
+<h3 id="2-解压编译"><a href="#2-解压编译" class="headerlink" title="2.解压编译"></a>2.解压编译</h3><p>虚拟机Ubuntu12.04测试路径为/home/cwr/my_test</p>
+<pre><code>（1）分别解压，例如：tar zxvf zlib-1.2.11.tar.gz
+
+（2）进入解压后的目标文件夹中
+
+    a.zlib命令 
+    CC=arm-hisiv100nptl-linux-gcc ./configure --prefix=/home/cwr/soft_install/zlib
+
+    b.openssl命令
+    ./Configure --prefix=/home/cwr/soft_install/openssl os/compiler:arm-hisiv100nptl-linux-gcc
+
+    c.openssh命令
+    ./configure -host=arm-linux -with-libs -with-zlib=/home/cwr/soft_install/zlib -with-ssl-dir=/home/cwr/soft_install/openssl -disable-etc-default-login CC=arm-hisiv100nptl-linux-gcc AR=arm-hisiv100nptl-linux-ar
+
+
+（3）zlib openssl 分别make和make install，openssh只需要make
+</code></pre><p><strong>注意</strong>  </p>
+<p>openssl有两个，一个是config，一个是Configure</p>
+<p>运行confighui会出现Configured for linux-elf.这个状态是错误的</p>
+<h3 id="3-拷贝相应文件到开发板"><a href="#3-拷贝相应文件到开发板" class="headerlink" title="3.拷贝相应文件到开发板"></a>3.拷贝相应文件到开发板</h3><p>确保目标板上有以下目录，如果没有，则新建：<br>/usr/sbin<br>/usr/local/bin<br>/usr/local/libexec<br>/usr/local/etc/ </p>
+<p>其实这部分内容没关系，只要到时候自己环境变量设置正确，系统能够找到就OK。</p>
+<p>目前，先以这个为参考。</p>
+<pre><code>（1）将 openssh-4.6p1目录下的sshd 拷贝到 目标板的/usr/sbin目录下
+
+（2）再copy scp sftp ssh ssh-add ssh-agent ssh-keygen ssh-keyscan 到目标板/usr/local/bin 目录下 
+
+（3）copy sftp-server ssh-keysign到/usr/local/libexec 
+
+（4）将sshd_config ,ssh_config拷贝到/usr/local/etc/目录下 
+
+**注意sshd_config，将PermitRootLogin yes前的注释“#”号去掉。其他最好不要去动，保持默认**
+</code></pre><h3 id="4-在目标板新建sshd工作目录"><a href="#4-在目标板新建sshd工作目录" class="headerlink" title="4.在目标板新建sshd工作目录"></a>4.在目标板新建sshd工作目录</h3><p>命令：</p>
+<pre><code>mkdir -p /var/run 
+mkdir -p /var/empty/sshd 
+chmod 755 /var/empty 
+</code></pre><h3 id="5-公钥私钥添加用户"><a href="#5-公钥私钥添加用户" class="headerlink" title="5.公钥私钥添加用户"></a>5.公钥私钥添加用户</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t ecdsa -f ssh_host_ecdsa_key -N “” </span><br><span class="line">ssh-keygen -t rsa -f ssh_host_rsa_key -N “” </span><br><span class="line">ssh-keygen -t dsa -f ssh_host_dsa_key -N “”</span><br></pre></td></tr></table></figure>
+<p>将生成的 ssh_host_*_key这3个文件copy到目标板的 /usr/local/etc/目录下 </p>
+<p>创建xshell登录用户密码</p>
+<p>如：passwd root</p>
+<p>创建用户并设置密码，登录输入即可。</p>
+<h3 id="6-运行过程中常见问题"><a href="#6-运行过程中常见问题" class="headerlink" title="6.运行过程中常见问题"></a>6.运行过程中常见问题</h3><p>（1）sshd re-exec requires execution with an absolute path  </p>
+<p>使用绝对路径运行sshd<br>/mnt/flash/ext/usr/sbin/sshd</p>
+<p>（2）Privilege separation user sshd does not exist </p>
+<p>在/etc/passwd 中添加下面这一行<br>sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin</p>
+<p>原文件添加后内容：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root:$<span class="number">1</span>$csgwK532$GRMt3I941DvhX3dTfHrFb1:<span class="number">0</span>:<span class="number">0</span>::/root:/bin/sh</span><br><span class="line">root:$<span class="number">1</span>$$qRPK7m23GJusamGpoGLby/:<span class="number">0</span>:<span class="number">0</span>::/root:/bin/sh</span><br><span class="line">sshd:x:<span class="number">74</span>:<span class="number">74</span>:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin</span><br></pre></td></tr></table></figure>
+<p>关于passwd文件中内容的含义，参考如下两篇博客</p>
+<p><a href="https://blog.csdn.net/huangjing_whlg/article/details/39226349" target="_blank" rel="noopener">Privilege separation user sshd does not exist</a></p>
+<p><a href="http://luzl.iteye.com/blog/564404" target="_blank" rel="noopener">非常详细的/etc/passwd解释</a></p>
+<p>（3）Permissions 0755 for ‘/usr/local/etc/ssh_host_dsa_key’ are too open. </p>
+<p>//则把目标板/usr/local/etc/下的ssh_host_<em>几个文件的权限改为700。如果出现权限不够问题，用su - root进入root用户再改。<br>命令：#chmod 700 ssh_host_</em></p>
+<p>（4）Permission denied (publickey,password,keyboard-interactive). </p>
+<p>//打开开发板/usr/local/sshd_config,将PermitRootLogin yes前的注释“#”号去掉。 </p>
+<p>（5）sshd: can’t load library ‘libz.so.1’  </p>
+<p>解决办法：将主机中zlib中的libz.s0.1拷贝过去 cp libz.so.1 /usr/lib/</p>
+<p>运行sshd出现</p>
+<p>情况1：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Could <span class="keyword">not</span> load host key: /usr/local/etc/ssh_host_key</span><br><span class="line">@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@</span><br><span class="line">@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @</span><br><span class="line">@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@</span><br><span class="line">Permissions 0777 for '/usr/local/etc/ssh_host_rsa_key' are too open.</span><br><span class="line">It is recommended that your <span class="keyword">private</span> key files are NOT accessible by others.</span><br><span class="line">This <span class="keyword">private</span> key will be ignored.</span><br><span class="line">bad permissions: ignore key: /usr/local/etc/ssh_host_rsa_key</span><br><span class="line">Could <span class="keyword">not</span> load host key: /usr/local/etc/ssh_host_rsa_key</span><br><span class="line">@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@</span><br><span class="line">@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @</span><br><span class="line">@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@</span><br><span class="line">Permissions 0777 for '/usr/local/etc/ssh_host_dsa_key' are too open.</span><br><span class="line">It is recommended that your <span class="keyword">private</span> key files are NOT accessible by others.</span><br><span class="line">This <span class="keyword">private</span> key will be ignored.</span><br><span class="line">bad permissions: ignore key: /usr/local/etc/ssh_host_dsa_key</span><br><span class="line">Could <span class="keyword">not</span> load host key: /usr/local/etc/ssh_host_dsa_key</span><br><span class="line">Disabling protocol version <span class="number">1.</span> Could <span class="keyword">not</span> load host key</span><br><span class="line">Disabling protocol version <span class="number">2.</span> Could <span class="keyword">not</span> load host key</span><br><span class="line">sshd: no hostkeys available -- exiting.</span><br></pre></td></tr></table></figure>
+<p>情况2：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># /mnt/flash/ext/usr/sbin/sshd </span><br><span class="line">Could <span class="keyword">not</span> load host key: /usr/local/etc/ssh_host_key</span><br><span class="line">Disabling protocol version <span class="number">1.</span> Could <span class="keyword">not</span> load host key</span><br></pre></td></tr></table></figure>
+<p>Privilege separation user sshd does not exist</p>
+<p>这些不用管，只要ps能看到设备运行起来就OK</p>
+<p>如果不行就按步骤逐一排查</p>
+<font color="red"><strong>以后要是移植出现难以解决的问题，直接更换压缩包软件版本</strong></font>
+
+
+<h3 id="开机自动运行ssh服务"><a href="#开机自动运行ssh服务" class="headerlink" title="开机自动运行ssh服务"></a>开机自动运行ssh服务</h3><h4 id="注意重启之后设备恢复默认配置问题"><a href="#注意重启之后设备恢复默认配置问题" class="headerlink" title="注意重启之后设备恢复默认配置问题"></a>注意重启之后设备恢复默认配置问题</h4><p><strong>修改/etc上的内容必须要将文件系统卸载掉</strong></p>
+<p>使用命令: umount -l /etc</p>
+<h4 id="umount命令"><a href="#umount命令" class="headerlink" title="umount命令"></a>umount命令</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">必杀：umount -l /dev/sda1</span><br><span class="line">参　　数：</span><br><span class="line">   -a    卸除/etc/mtab中记录的所有文件系统。</span><br><span class="line">   -h    显示帮助。</span><br><span class="line">   -n    卸除时不要将信息存入/etc/mtab文件中。</span><br><span class="line">   -r    若无法成功卸除，则尝试以只读的方式重新挂入文件系统。</span><br><span class="line">   -t&lt;文件系统类型&gt;    仅卸除选项中所指定的文件系统。</span><br><span class="line">   -v    执行时显示详细的信息。</span><br><span class="line">   -V    显示版本信息。</span><br></pre></td></tr></table></figure>
+<p>测试 umount -l /dev/mtdblock9 可行 ，df -m 成功看到该分区被卸载</p>
+<p>由于根目录下由于公司v8设备容量过小，只能将移植的ssh相关文件放置在其他分区中。</p>
+<h4 id="1-环境变量配置"><a href="#1-环境变量配置" class="headerlink" title="1.环境变量配置"></a>1.环境变量配置</h4><p>开机自动设置环境变量</p>
+<p>测试成功代码，在/etc/profile中添加</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">set_path_before()</span><br><span class="line">&#123;</span><br><span class="line">    [ -d $<span class="number">1</span> ] &amp;&amp; PATH=<span class="string">"$1:$PATH"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PATH=<span class="string">"/usr/bin:/usr/sbin:/bin:/sbin:/mnt/flash/app"</span></span><br><span class="line">set_path_before /usr/local/<span class="keyword">extern</span>/bin</span><br><span class="line">set_path_before /usr/local/sbin</span><br><span class="line">set_path_before /usr/local/bin</span><br><span class="line">set_path_before /mnt/flash/monitor</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">set_path_before /mnt/flash/ext/usr/local/bin</span><br><span class="line">set_path_before /mnt/flash/ext/usr/sbin</span><br><span class="line">set_path_before /mnt/flash/ext/usr/local/libexec</span><br></pre></td></tr></table></figure>
+<p>折腾半天的代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SSH_BIN_PATH=<span class="string">"/mnt/flash/ext/usr/local/bin:/mnt/flash/ext/usr/sbin:/mnt/flash/ext/usr/local/libexec"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> SSH_BIN_PATH</span><br></pre></td></tr></table></figure>
+<p>用这种方式，环境变量一直无法成功。</p>
+<p>出现问题：</p>
+<p>而且将export PATH=”$PATH:/mnt/flash/ext/usr/bin” 写在shell脚本中运行也无法生效</p>
+<h4 id="2-创建-var-empty-sshd"><a href="#2-创建-var-empty-sshd" class="headerlink" title="2.创建/var/empty/sshd"></a>2.创建/var/empty/sshd</h4><p>在/etc/init.d/rcS中修改</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/bin/mkdir -p /var/empty/sshd</span><br><span class="line">/bin/chmod <span class="number">755</span> -R /var/empty</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/08/15/海思平台移植/" data-id="cjkv3gv1d0000607cl605a8m3" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/08/15/hello-world/" class="article-date">
+  <time datetime="2018-08-15T09:23:20.263Z" itemprop="datePublished">2018-08-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/15/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/08/15/hello-world/" data-id="cjkv3gv1j0002607cn8g7jl7d" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/08/15/海思平台移植/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/15/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 简单依旧<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
